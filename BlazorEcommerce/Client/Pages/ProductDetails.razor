@@ -32,7 +32,7 @@ else
                     <select class="form-select" @bind="currentTypeId">
                         @foreach (var variant in product.Variants)
                         {
-                            <option value="@variant.ProductTypeId">@variant.ProductType.Name</option>
+                            <option value="@variant.ProductTypeId">@variant.ProductType!.Name</option>
                         }
                     </select>
                 </div>
@@ -49,7 +49,7 @@ else
                     $@GetSelectedVariant().Price
                 </h4>
             }
-            <button class="btn btn-primary" @onclick="AddToCart">
+            <button class="btn btn-primary" @onclick="AddToCartAsync">
                 <i class="oi oi-cart"></i>&nbsp;&nbsp;&nbsp;Add to Cart
             </button>
         </div>
@@ -69,14 +69,14 @@ else
     {
         message = "Loading product...";
 
-        var result = await ProductService.GetProduct(Id);
+        var result = await ProductService.GetProductAsync(Id);
         if (!result.Success)
         {
             message = result.Message;
         }
         else
         {
-            product = result.Data;
+            product = result.Data!;
             if (product.Variants.Count > 0)
             {
                 currentTypeId = product.Variants[0].ProductTypeId;
@@ -86,11 +86,11 @@ else
 
     private ProductVariant GetSelectedVariant()
     {
-        var variant = product.Variants.FirstOrDefault(v => v.ProductTypeId == currentTypeId);
+        var variant = product!.Variants.Single(v => v.ProductTypeId == currentTypeId);
         return variant;
     }
 
-    private async Task AddToCart()
+    private async Task AddToCartAsync()
     {
         var productVariant = GetSelectedVariant();
         var cartItem = new CartItem
@@ -99,6 +99,6 @@ else
                 ProductTypeId = productVariant.ProductTypeId
             };
 
-        await CartService.AddToCart(cartItem);
+        await CartService.AddToCartAsync(cartItem);
     }
 }

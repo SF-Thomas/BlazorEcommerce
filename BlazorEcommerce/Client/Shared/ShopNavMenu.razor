@@ -39,7 +39,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await CategoryService.GetCategories();
+        await CategoryService.GetCategoriesAsync();
         CategoryService.OnChange += StateHasChanged;
     }
 

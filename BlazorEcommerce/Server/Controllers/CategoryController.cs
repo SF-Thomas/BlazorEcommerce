@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorEcommerce.Server.Controllers
@@ -16,37 +15,37 @@ namespace BlazorEcommerce.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> GetCategories()
+        public async Task<ActionResult<ServiceResponse<List<Category>>>> GetCategoriesAsync()
         {
-            var result = await _categoryService.GetCategories();
+            var result = await _categoryService.GetCategoriesAsync();
             return Ok(result);
         }
 
         [HttpGet("admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> GetAdminCategories()
+        public async Task<ActionResult<ServiceResponse<List<Category>>>> GetAdminCategoriesAsync()
         {
-            var result = await _categoryService.GetAdminCategories();
+            var result = await _categoryService.GetAdminCategoriesAsync();
             return Ok(result);
         }
 
         [HttpDelete("admin/{id}"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> DeleteCategory(int id)
+        public async Task<ActionResult<ServiceResponse<List<Category>>>> DeleteCategoryAsync(int id)
         {
-            var result = await _categoryService.DeleteCategory(id);
+            var result = await _categoryService.DeleteCategoryAsync(id);
             return Ok(result);
         }
 
         [HttpPost("admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> AddCategory(Category category)
+        public async Task<ActionResult<ServiceResponse<List<Category>>>> AddCategoryAsync(Category category)
         {
-            var result = await _categoryService.AddCategory(category);
+            var result = await _categoryService.AddCategoryAsync(category);
             return Ok(result);
         }
 
         [HttpPut("admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> UpdateCategory(Category category)
+        public async Task<ActionResult<ServiceResponse<List<Category>>>> UpdateCategoryAsync(Category category)
         {
-            var result = await _categoryService.UpdateCategory(category);
+            var result = await _categoryService.UpdateCategoryAsync(category);
             return Ok(result);
         }
     }

@@ -5,7 +5,7 @@
 
 <div class="dropdown">
     <button @onclick="ToggleUserMenu"
-            @onfocusout="HideUserMenu"
+    @onfocusout="HideUserMenuAsync"
             class="btn btn-secondary dropdown-toggle user-button">
         <i class="oi oi-person"></i>
     </button>
@@ -16,7 +16,7 @@
                 <a href="orders" class="dropdown-item">Orders</a>
                 <hr />
                 <AdminMenu />
-                <button class="dropdown-item" @onclick="Logout">Logout</button>
+                <button class="dropdown-item" @onclick="LogoutAsync">Logout</button>
             </Authorized>
             <NotAuthorized>
                 <a href="login?returnUrl=@NavigationManager.ToBaseRelativePath(NavigationManager.Uri)" class="dropdown-item">Login</a>
@@ -29,23 +29,23 @@
 @code {
     private bool showUserMenu = false;
 
-    private string UserMenuCssClass => showUserMenu ? "show-menu" : null;
+    private string? UserMenuCssClass => showUserMenu ? "show-menu" : null;
 
     private void ToggleUserMenu()
     {
         showUserMenu = !showUserMenu;
     }
 
-    private async Task HideUserMenu()
+    private async Task HideUserMenuAsync()
     {
         await Task.Delay(200);
         showUserMenu = false;
     }
 
-    private async Task Logout()
+    private async Task LogoutAsync()
     {
         await LocalStorage.RemoveItemAsync("authToken");
-        await CartService.GetCartItemsCount();
+        await CartService.GetCartItemsCountAsync();
         await AuthenticationStateProvider.GetAuthenticationStateAsync();
         NavigationManager.NavigateTo("");
     }

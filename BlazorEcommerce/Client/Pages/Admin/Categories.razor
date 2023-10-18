@@ -14,9 +14,9 @@
 
 @foreach (var category in CategoryService.AdminCategories)
 {
-    @if (category.Editing)
+    @if (category.Editing && editingCategory is not null)
     {
-        <EditForm Model="editingCategory" OnSubmit="UpdateCategory">
+        <EditForm Model="editingCategory" OnSubmit="UpdateCategoryAsync">
             <div class="row">
                 <div class="col">
                     <InputText @bind-Value="editingCategory.Name" class="form-control"></InputText>
@@ -31,7 +31,7 @@
                     <button type="submit" class="btn btn-primary">
                         <i class="oi oi-cloud-upload"></i>
                     </button>
-                    <button class="btn btn-primary" @onclick="CancelEditing">
+                    <button class="btn btn-primary" @onclick="CancelEditingAsync">
                         <i class="oi oi-circle-x"></i>
                     </button>
                 </div>
@@ -54,7 +54,7 @@
                 <button class="btn btn-primary" @onclick="(() => EditCategory(category))">
                     <i class="oi oi-pencil"></i>
                 </button>
-                <button class="btn btn-primary" @onclick="(() => DeleteCategory(category.Id))">
+                <button class="btn btn-primary" @onclick="(() => DeleteCategoryAsync(category.Id))">
                     <i class="oi oi-trash"></i>
                 </button>
             </div>
@@ -66,11 +66,11 @@
 </button>
 
 @code {
-    Category editingCategory = null;
+    Category? editingCategory = null;
 
     protected override async Task OnInitializedAsync()
     {
-        await CategoryService.GetAdminCategories();
+        await CategoryService.GetAdminCategoriesAsync();
         CategoryService.OnChange += StateHasChanged;
     }
 
@@ -90,23 +90,26 @@
         editingCategory = category;
     }
 
-    private async Task UpdateCategory()
+    private async Task UpdateCategoryAsync()
     {
+        if (editingCategory is null)
+            return;
+
         if (editingCategory.IsNew)
-            await CategoryService.AddCategory(editingCategory);
+            await CategoryService.AddCategoryAsync(editingCategory);
         else
-            await CategoryService.UpdateCategory(editingCategory);
+            await CategoryService.UpdateCategoryAsync(editingCategory);
         editingCategory = new Category();
     }
 
-    private async Task CancelEditing()
+    private async Task CancelEditingAsync()
     {
         editingCategory = new Category();
-        await CategoryService.GetAdminCategories();
+        await CategoryService.GetAdminCategoriesAsync();
     }
 
-    private async Task DeleteCategory(int id)
+    private async Task DeleteCategoryAsync(int id)
     {
-        await CategoryService.DeleteCategory(id);
+        await CategoryService.DeleteCategoryAsync(id);
     }
 }

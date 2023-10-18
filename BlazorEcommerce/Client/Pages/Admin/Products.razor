@@ -42,7 +42,7 @@ else
                 <td>
                     @foreach (var variant in product.Variants)
                     {
-                        <span>@variant.ProductType.Name</span>
+                        <span>@variant.ProductType!.Name</span>
 
                         <br />
                     }
@@ -70,7 +70,7 @@ else
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await ProductService.GetAdminProducts();
+        await ProductService.GetAdminProductsAsync();
     }
 
     void EditProduct(int productId)

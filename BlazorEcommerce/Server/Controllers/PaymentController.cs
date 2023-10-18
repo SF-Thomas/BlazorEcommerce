@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorEcommerce.Server.Controllers
@@ -16,16 +15,16 @@ namespace BlazorEcommerce.Server.Controllers
         }
 
         [HttpPost("checkout"), Authorize]
-        public async Task<ActionResult<string>> CreateCheckoutSession()
+        public async Task<ActionResult<string>> CreateCheckoutSessionAsync()
         {
-            var session = await _paymentService.CreateCheckoutSession();
+            var session = await _paymentService.CreateCheckoutSessionAsync();
             return Ok(session.Url);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<bool>>> FulfillOrder()
+        public async Task<ActionResult<ServiceResponse<bool>>> FulfillOrderAsync()
         {
-            var response = await _paymentService.FulfillOrder(Request);
+            var response = await _paymentService.FulfillOrderAsync(Request);
             if(!response.Success)
                 return BadRequest(response.Message);
 

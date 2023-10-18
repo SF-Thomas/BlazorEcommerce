@@ -9,17 +9,17 @@
             _context = context;
         }
 
-        public async Task<ServiceResponse<List<Category>>> AddCategory(Category category)
+        public async Task<ServiceResponse<List<Category>>> AddCategoryAsync(Category category)
         {
             category.Editing = category.IsNew = false;
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
-            return await GetAdminCategories();
+            return await GetAdminCategoriesAsync();
         }
 
-        public async Task<ServiceResponse<List<Category>>> DeleteCategory(int id)
+        public async Task<ServiceResponse<List<Category>>> DeleteCategoryAsync(int id)
         {
-            Category category = await GetCategoryById(id);
+            Category? category = await GetCategoryByIdAsync(id);
             if (category == null)
             {
                 return new ServiceResponse<List<Category>>
@@ -32,15 +32,15 @@
             category.Deleted = true;
             await _context.SaveChangesAsync();
 
-            return await GetAdminCategories();
+            return await GetAdminCategoriesAsync();
         }
 
-        private async Task<Category> GetCategoryById(int id)
+        private async Task<Category?> GetCategoryByIdAsync(int id)
         {
-            return await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Categories.SingleOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<ServiceResponse<List<Category>>> GetAdminCategories()
+        public async Task<ServiceResponse<List<Category>>> GetAdminCategoriesAsync()
         {
             var categories = await _context.Categories
                 .Where(c => !c.Deleted)
@@ -51,7 +51,7 @@
             };
         }
 
-        public async Task<ServiceResponse<List<Category>>> GetCategories()
+        public async Task<ServiceResponse<List<Category>>> GetCategoriesAsync()
         {
             var categories = await _context.Categories
                 .Where(c => !c.Deleted && c.Visible)
@@ -62,9 +62,9 @@
             };
         }
 
-        public async Task<ServiceResponse<List<Category>>> UpdateCategory(Category category)
+        public async Task<ServiceResponse<List<Category>>> UpdateCategoryAsync(Category category)
         {
-            var dbCategory = await GetCategoryById(category.Id);
+            var dbCategory = await GetCategoryByIdAsync(category.Id);
             if (dbCategory == null)
             {
                 return new ServiceResponse<List<Category>>
@@ -80,7 +80,7 @@
 
             await _context.SaveChangesAsync();
 
-            return await GetAdminCategories();
+            return await GetAdminCategoriesAsync();
 
         }
     }

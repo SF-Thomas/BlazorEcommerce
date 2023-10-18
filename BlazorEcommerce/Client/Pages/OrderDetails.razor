@@ -1,7 +1,7 @@
 ﻿@page "/orders/{orderId:int}"
 @inject IOrderService OrderService
 
-@if (order == null)
+@if (order is null)
 {
     <span>Loading order...</span>
 }
@@ -34,10 +34,10 @@ else
     [Parameter]
     public int OrderId { get; set; }
 
-    OrderDetailsResponse order = null;
+    OrderDetailsResponse? order = null;
 
     protected override async Task OnInitializedAsync()
     {
-        order = await OrderService.GetOrderDetails(OrderId);
+        order = await OrderService.GetOrderDetailsAsync(OrderId);
     }
 }

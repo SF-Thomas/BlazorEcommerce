@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorEcommerce.Server.Controllers
@@ -17,23 +16,23 @@ namespace BlazorEcommerce.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> GetProductTypes()
+        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> GetProductTypesAsync()
         {
-            var response = await _productTypeService.GetProductTypes();
+            var response = await _productTypeService.GetProductTypesAsync();
             return Ok(response);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> AddProductType(ProductType productType)
+        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> AddProductTypeAsync(ProductType productType)
         {
-            var response = await _productTypeService.AddProductType(productType);
+            var response = await _productTypeService.AddProductTypeAsync(productType);
             return Ok(response);
         }
 
         [HttpPut]
-        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> UpdateProductType(ProductType productType)
+        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> UpdateProductTypeAsync(ProductType productType)
         {
-            var response = await _productTypeService.UpdateProductType(productType);
+            var response = await _productTypeService.UpdateProductTypeAsync(productType);
             return Ok(response);
         }
     }

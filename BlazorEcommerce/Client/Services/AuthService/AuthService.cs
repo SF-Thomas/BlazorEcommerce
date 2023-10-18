@@ -11,27 +11,36 @@
             _authStateProvider = authStateProvider;
         }
 
-        public async Task<ServiceResponse<bool>> ChangePassword(UserChangePassword request)
+        public async Task<ServiceResponse<bool>> ChangePasswordAsync(UserChangePassword request)
         {
             var result = await _http.PostAsJsonAsync("api/auth/change-password", request.Password);
-            return await result.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
+            var content = await result.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
+            return content!;
         }
 
-        public async Task<bool> IsUserAuthenticated()
+        public async Task<bool> IsUserAuthenticatedAsync()
         {
-            return (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
+            var state = await _authStateProvider.GetAuthenticationStateAsync();
+
+            if (state is null || state.User.Identity is null)
+                return false;
+
+            return state.User.Identity.IsAuthenticated;
         }
 
-        public async Task<ServiceResponse<string>> Login(UserLogin request)
+        public async Task<ServiceResponse<string>> LoginAsync(UserLogin request)
         {
             var result = await _http.PostAsJsonAsync("api/auth/login", request);
-            return await result.Content.ReadFromJsonAsync<ServiceResponse<string>>();
+            var content = await result.Content.ReadFromJsonAsync<ServiceResponse<string>>();
+            return content!;
         }
 
-        public async Task<ServiceResponse<int>> Register(UserRegister request)
+        public async Task<ServiceResponse<int>> RegisterAsync(UserRegister request)
         {
             var result = await _http.PostAsJsonAsync("api/auth/register", request);
-            return await result.Content.ReadFromJsonAsync<ServiceResponse<int>>();
+            var content = await result.Content.ReadFromJsonAsync<ServiceResponse<int>>();
+
+            return content!;
         }
     }
 }

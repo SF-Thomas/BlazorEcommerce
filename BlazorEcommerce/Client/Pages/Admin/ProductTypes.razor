@@ -7,9 +7,9 @@
 
 @foreach (var productType in ProductTypeService.ProductTypes)
 {
-    @if (productType.Editing)
+    @if (productType.Editing && editingProductType is not null)
     {
-        <EditForm Model="editingProductType" OnSubmit="UpdateProductType">
+        <EditForm Model="editingProductType" OnSubmit="UpdateProductTypeAsync">
             <div class="row">
                 <div class="col">
                     <InputText @bind-Value="editingProductType.Name" class="form-control"></InputText>
@@ -41,11 +41,11 @@
 </button>
 
 @code {
-    ProductType editingProductType = null;
+    ProductType? editingProductType = null;
 
     protected override async Task OnInitializedAsync()
     {
-        await ProductTypeService.GetProductTypes();
+        await ProductTypeService.GetProductTypesAsync();
         ProductTypeService.OnChange += StateHasChanged;
     }
 
@@ -65,12 +65,15 @@
         editingProductType = ProductTypeService.CreateNewProductType();
     }
 
-    private async Task UpdateProductType()
+    private async Task UpdateProductTypeAsync()
     {
+        if (editingProductType is null)
+            return;
+
         if (editingProductType.IsNew)
-            await ProductTypeService.AddProductType(editingProductType);
+            await ProductTypeService.AddProductTypeAsync(editingProductType);
         else
-            await ProductTypeService.UpdateProductType(editingProductType);
+            await ProductTypeService.UpdateProductTypeAsync(editingProductType);
         editingProductType = new ProductType();
     }
 }

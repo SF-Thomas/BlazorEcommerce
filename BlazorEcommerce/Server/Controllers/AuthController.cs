@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -17,9 +16,9 @@ namespace BlazorEcommerce.Server.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<ServiceResponse<int>>> Register(UserRegister request)
+        public async Task<ActionResult<ServiceResponse<int>>> RegisterAsync(UserRegister request)
         {
-            var response = await _authService.Register(
+            var response = await _authService.RegisterAsync(
                 new User
                 {
                     Email = request.Email
@@ -35,9 +34,9 @@ namespace BlazorEcommerce.Server.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<ServiceResponse<string>>> Login(UserLogin request)
+        public async Task<ActionResult<ServiceResponse<string>>> LoginAsync(UserLogin request)
         {
-            var response = await _authService.Login(request.Email, request.Password);
+            var response = await _authService.LoginAsync(request.Email, request.Password);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -47,17 +46,23 @@ namespace BlazorEcommerce.Server.Controllers
         }
 
         [HttpPost("change-password"), Authorize]
-        public async Task<ActionResult<ServiceResponse<bool>>> ChangePassword([FromBody] string newPassword)
+        public async Task<ActionResult<ServiceResponse<bool>>> ChangePasswordAsync([FromBody] string newPassword)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var response = await _authService.ChangePassword(int.Parse(userId), newPassword);
+            var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (!response.Success)
+            if (int.TryParse(nameIdentifier, out int userId))
             {
-                return BadRequest(response);
+                var response = await _authService.ChangePasswordAsync(userId, newPassword);
+
+                if (!response.Success)
+                {
+                    return BadRequest(response);
+                }
+
+                return Ok(response);
             }
 
-            return Ok(response);
+            return Unauthorized();
         }
     }
 }

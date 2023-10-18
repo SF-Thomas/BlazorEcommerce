@@ -4,9 +4,9 @@
     {
         event Action OnChange;
         public List<ProductType> ProductTypes { get; set; }
-        Task GetProductTypes();
-        Task AddProductType(ProductType productType);
-        Task UpdateProductType(ProductType productType);
+        Task GetProductTypesAsync();
+        Task AddProductTypeAsync(ProductType productType);
+        Task UpdateProductTypeAsync(ProductType productType);
         ProductType CreateNewProductType();
     }
 }

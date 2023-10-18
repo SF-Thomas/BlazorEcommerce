@@ -5,33 +5,29 @@ namespace BlazorEcommerce.Client.Services.OrderService
     public class OrderService : IOrderService
     {
         private readonly HttpClient _http;
-        private readonly AuthenticationStateProvider _authStateProvider;
-        private readonly NavigationManager _navigationManager;
+        private readonly IAuthService _authService;
 
-        public OrderService(HttpClient http,
-            AuthenticationStateProvider authStateProvider,
-            NavigationManager navigationManager)
+        public OrderService(HttpClient http, IAuthService authService)
         {
             _http = http;
-            _authStateProvider = authStateProvider;
-            _navigationManager = navigationManager;
+            _authService = authService;
         }
 
-        public async Task<OrderDetailsResponse> GetOrderDetails(int orderId)
+        public async Task<OrderDetailsResponse> GetOrderDetailsAsync(int orderId)
         {
             var result = await _http.GetFromJsonAsync<ServiceResponse<OrderDetailsResponse>>($"api/order/{orderId}");
-            return result.Data;
+            return result!.Data!;
         }
 
-        public async Task<List<OrderOverviewResponse>> GetOrders()
+        public async Task<List<OrderOverviewResponse>> GetOrdersAsync()
         {
             var result = await _http.GetFromJsonAsync<ServiceResponse<List<OrderOverviewResponse>>>("api/order");
-            return result.Data;
+            return result!.Data!;
         }
 
-        public async Task<string> PlaceOrder()
+        public async Task<string> PlaceOrderAsync()
         {
-            if (await IsUserAuthenticated())
+            if (await _authService.IsUserAuthenticatedAsync())
             {
                 var result = await _http.PostAsync("api/payment/checkout", null);
                 var url = await result.Content.ReadAsStringAsync();
@@ -41,10 +37,6 @@ namespace BlazorEcommerce.Client.Services.OrderService
             {
                 return "login";
             }
-        }
-        private async Task<bool> IsUserAuthenticated()
-        {
-            return (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
         }
     }
 }

@@ -5,7 +5,7 @@
 
 <h3>Register</h3>
 
-<EditForm Model="user" OnValidSubmit="HandleRegistration">
+<EditForm Model="user" OnValidSubmit="HandleRegistrationAsync">
     <DataAnnotationsValidator />
     <div class="mb-3">
         <label for="email">Email</label>
@@ -34,9 +34,9 @@
     string message = string.Empty;
     string messageCssClass = string.Empty;
 
-    async Task HandleRegistration()
+    async Task HandleRegistrationAsync()
     {
-        var result = await AuthService.Register(user);
+        var result = await AuthService.RegisterAsync(user);
         message = result.Message;
         if (result.Success)
             messageCssClass = "text-success";

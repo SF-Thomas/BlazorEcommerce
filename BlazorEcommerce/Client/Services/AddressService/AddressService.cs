@@ -9,18 +9,17 @@
             _http = http;
         }
 
-        public async Task<Address> AddOrUpdateAddress(Address address)
+        public async Task<Address> AddOrUpdateAddressAsync(Address address)
         {
             var response = await _http.PostAsJsonAsync("api/address", address);
-            return response.Content
-                .ReadFromJsonAsync<ServiceResponse<Address>>().Result.Data;
+            var content = response.Content.ReadFromJsonAsync<ServiceResponse<Address>>();
+            return content!.Result!.Data!;
         }
 
-        public async Task<Address> GetAddress()
+        public async Task<Address> GetAddressAsync()
         {
-            var response = await _http
-                .GetFromJsonAsync<ServiceResponse<Address>>("api/address");
-            return response.Data;
+            var response = await _http.GetFromJsonAsync<ServiceResponse<Address>>("api/address");
+            return response!.Data!;
         }
     }
 }

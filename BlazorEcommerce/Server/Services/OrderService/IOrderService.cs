@@ -2,8 +2,8 @@
 {
     public interface IOrderService
     {
-        Task<ServiceResponse<bool>> PlaceOrder(int userId);
-        Task<ServiceResponse<List<OrderOverviewResponse>>> GetOrders();
-        Task<ServiceResponse<OrderDetailsResponse>> GetOrderDetails(int orderId);
+        Task<ServiceResponse<bool>> PlaceOrderAsync(int userId);
+        Task<ServiceResponse<List<OrderOverviewResponse>>> GetOrdersAsync();
+        Task<ServiceResponse<OrderDetailsResponse>> GetOrderDetailsAsync(int orderId);
     }
 }

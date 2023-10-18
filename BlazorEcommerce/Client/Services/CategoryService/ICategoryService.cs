@@ -5,11 +5,11 @@
         event Action OnChange;
         List<Category> Categories { get; set; }
         List<Category> AdminCategories { get; set; }
-        Task GetCategories();
-        Task GetAdminCategories();
-        Task AddCategory(Category category);
-        Task UpdateCategory(Category category);
-        Task DeleteCategory(int categoryId);
+        Task GetCategoriesAsync();
+        Task GetAdminCategoriesAsync();
+        Task AddCategoryAsync(Category category);
+        Task UpdateCategoryAsync(Category category);
+        Task DeleteCategoryAsync(int categoryId);
         Category CreateNewCategory();
     }
 }

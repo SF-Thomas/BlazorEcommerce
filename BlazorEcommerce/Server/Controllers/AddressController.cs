@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorEcommerce.Server.Controllers
@@ -17,15 +16,15 @@ namespace BlazorEcommerce.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<Address>>> GetAddress()
+        public async Task<ActionResult<ServiceResponse<Address>>> GetAddressAsync()
         {
-            return await _addressService.GetAddress();
+            return await _addressService.GetAddressAsync();
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<Address>>> AddOrUpdateAddress(Address address)
+        public async Task<ActionResult<ServiceResponse<Address>>> AddOrUpdateAddressAsync(Address address)
         {
-            return await _addressService.AddOrUpdateAddress(address);
+            return await _addressService.AddOrUpdateAddressAsync(address);
         }
     }
 }

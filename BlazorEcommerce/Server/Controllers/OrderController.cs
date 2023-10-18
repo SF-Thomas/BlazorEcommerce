@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorEcommerce.Server.Controllers
 {
@@ -15,16 +14,16 @@ namespace BlazorEcommerce.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<OrderOverviewResponse>>>> GetOrders()
+        public async Task<ActionResult<ServiceResponse<List<OrderOverviewResponse>>>> GetOrdersAsync()
         {
-            var result = await _orderService.GetOrders();
+            var result = await _orderService.GetOrdersAsync();
             return Ok(result);
         }
 
         [HttpGet("{orderId}")]
-        public async Task<ActionResult<ServiceResponse<OrderDetailsResponse>>> GetOrdersDetails(int orderId)
+        public async Task<ActionResult<ServiceResponse<OrderDetailsResponse>>> GetOrdersDetailsAsync(int orderId)
         {
-            var result = await _orderService.GetOrderDetails(orderId);
+            var result = await _orderService.GetOrderDetailsAsync(orderId);
             return Ok(result);
         }
     }

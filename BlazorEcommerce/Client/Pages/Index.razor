@@ -28,11 +28,11 @@ else
     {
         if (SearchText != null)
         {
-            await ProductService.SearchProducts(SearchText, Page);
+            await ProductService.SearchProductsAsync(SearchText, Page);
         }
         else
         {
-            await ProductService.GetProducts(CategoryUrl);
+            await ProductService.GetProductsAsync(CategoryUrl);
         }
     }
 }

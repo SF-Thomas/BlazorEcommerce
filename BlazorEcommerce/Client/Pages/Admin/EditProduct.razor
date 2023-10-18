@@ -57,7 +57,7 @@ else
         </div>
         <div class="mb-0">
             <label for="images">Image(s)</label>
-            <InputFile id="images" OnChange="OnFileChange" multiple class="form-control"></InputFile>
+            <InputFile id="images" OnChange="OnFileChangeAsync" multiple class="form-control"></InputFile>
         </div>
         <div class="mb-0">
             <label for="description">Description</label>
@@ -126,7 +126,7 @@ else
 </EditForm>
     @if (!product.IsNew)
     {
-        <button type="button" class="btn btn-danger float-start" @onclick="DeleteProduct">
+        <button type="button" class="btn btn-danger float-start" @onclick="DeleteProductAsync">
             Delete Product
         </button>
     }
@@ -143,8 +143,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await ProductTypeService.GetProductTypes();
-        await CategoryService.GetAdminCategories();
+        await ProductTypeService.GetProductTypesAsync();
+        await CategoryService.GetAdminCategoriesAsync();
     }
 
     protected override async Task OnParametersSetAsync()
@@ -156,8 +156,8 @@ else
         }
         else
         {
-            Product dbProduct = (await ProductService.GetProduct(Id)).Data;
-            if (dbProduct == null)
+            Product? dbProduct = (await ProductService.GetProductAsync(Id)).Data;
+            if (dbProduct is null)
             {
                 msg = $"Product with Id '{Id}' does not exist!";
                 return;
@@ -192,33 +192,33 @@ else
             .Add(new ProductVariant { IsNew = true, ProductId = product.Id });
     }
 
-    async void AddOrUpdateProduct()
+    async Task AddOrUpdateProduct()
     {
         if (product.IsNew)
         {
-            var result = await ProductService.CreateProduct(product);
+            var result = await ProductService.CreateProductAsync(product);
             NavigationManager.NavigateTo($"admin/product/{result.Id}");
         }
         else
         {
             product.IsNew = false;
-            product = await ProductService.UpdateProduct(product);
+            product = await ProductService.UpdateProductAsync(product);
             NavigationManager.NavigateTo($"admin/product/{product.Id}", true);
         }
     }
 
-    async void DeleteProduct()
+    async Task DeleteProductAsync()
     {
         bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm",
             $"Do you really want to delete '{product.Title}'?");
         if (confirmed)
         {
-            await ProductService.DeleteProduct(product);
+            await ProductService.DeleteProductAsync(product);
             NavigationManager.NavigateTo("admin/products");
         }
     }
 
-    async Task OnFileChange(InputFileChangeEventArgs e)
+    async Task OnFileChangeAsync(InputFileChangeEventArgs e)
     {
         var format = "image/png";
         foreach (var image in e.GetMultipleFiles(int.MaxValue))
